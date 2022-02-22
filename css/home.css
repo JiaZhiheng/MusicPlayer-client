@@ -16,6 +16,7 @@
 
 .wrapper .content {
   width: 100%;
+  min-height: 450px;
 }
 
 .w {
@@ -143,10 +144,11 @@
   font-size: 0;
 }
 
-.recommend-playlist-cover>img {
+.recommend-playlist-cover img {
   width: 100%;
   height: auto;
   font-size: 0;
+  transition: transform 0.2s linear;
 }
 
 .recommend-playlist-cover .recommend-playlist-icon {
@@ -156,10 +158,15 @@
   right: 5px;
   color: #ccc;
   font-size: 20px;
+  transition: opacity 0.2s linear;
 }
 
 .hover .recommend-playlist-icon {
   opacity: 1;
+}
+
+.hover .recommend-playlist-cover img {
+  transform: scale(1.1);
 }
 
 .recommend-playlist-title {
