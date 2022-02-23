@@ -3,14 +3,14 @@ import { debounce } from '../util/util.js';
 // 切换箭头为静态 HTML 样式，无需根据图片数量动态生成。
 const carouselControl = `
 <button class="carousel-control carousel-control-left carousel-control-hover">
-<svg class="icon" aria-hidden="true">
-    <use xlink:href="#icon-arrow-left"></use>
-</svg>
+    <svg class="icon" aria-hidden="true">
+        <use xlink:href="#icon-arrow-left"></use>
+    </svg>
 </button>
 <button class="carousel-control carousel-control-right carousel-control-hover">
-<svg class="icon" aria-hidden="true">
-    <use xlink:href="#icon-arrow-right"></use>
-</svg>
+    <svg class="icon" aria-hidden="true">
+        <use xlink:href="#icon-arrow-right"></use>
+    </svg>  
 </button>
 `;
 //轮播图配置
@@ -24,14 +24,14 @@ const carousel = {
 
 export function carouselRender(data) {
   //初始化轮播图
-  let carouselItem = '',
-    carouselIndicatorsLi = '';
-  const wrapper = document.querySelector('.carousel-wrapper');
-  let { width = 0 } = wrapper.getBoundingClientRect(); //得到图片的宽度
+  let carouselItem = ''; //轮播图图片
+  let carouselIndicatorsLi = ''; //轮播图指示器
+  const wrapper = document.querySelector('.carousel-wrapper'); //获取文档中 class="carousel-wrapper" 的元素
+  let { width = 0 } = wrapper.getBoundingClientRect(); //通过解构赋值得到轮播图组件的宽度
   //动态生成轮播图
-  data.forEach((item, index) => {
+  data.forEach((item, index) => { //forEach() 方法用于调用数组的每个元素，并将元素传递给回调函数。
     //指示器激活选中判断
-    let isActive = (carousel.currentIndex == index) ? 'active' : '';
+    let isActive = (carousel.currentIndex == index) ? 'active' : ''; //判断轮播图当前切换的画面是否与index相同
     //动态生成轮播图图片，并给每一张图片加上偏移量和动画效果
     carouselItem += `
             <div class="carousel-item ${'#' + index}" style='transform:translateX(${width * (index - 1)}px);transition-duration:${carousel.animationTimes}s'>
