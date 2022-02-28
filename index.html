@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="./images/logo.ico" type="image/x-icon">
   <title>音乐播放器</title>
   <link rel="stylesheet" href="./css/reset.css">
   <link rel="stylesheet" href="./css/common.css">
@@ -42,16 +43,16 @@
         <div class="control">
           <!-- 新增加上一首的 id 选择器 -->
           <svg class="icon" aria-hidden="true" id="player-prev">
-                        <use xlink:href="#icon-shangyiqu"></use>
-                    </svg>
+            <use xlink:href="#icon-shangyiqu"></use>
+          </svg>
           <!-- 新增加播放暂停的 id 选择器 -->
           <svg class="icon" aria-hidden="true" id='player-control'>
-                        <use xlink:href="#icon-zanting"></use>
-                    </svg>
+            <use xlink:href="#icon-zanting"></use>
+          </svg>
           <!-- 新增加下一首的 id 选择器 -->
           <svg class="icon" aria-hidden="true" id="player-next">
-                        <use xlink:href="#icon-xiayiqu"></use>
-                    </svg>
+            <use xlink:href="#icon-xiayiqu"></use>
+          </svg>
         </div>
         <div class="d-flex justify-content-between">
           <div class="song-progress d-flex justify-content-between">
@@ -64,8 +65,8 @@
           </div>
           <div class="volume d-flex">
             <svg class="icon volume-icon" aria-hidden="true">
-                            <use xlink:href="#icon-yinliang"></use>
-                        </svg>
+              <use xlink:href="#icon-yinliang"></use>
+            </svg>
             <div class="progress" id='volume-bar'>
               <div class="progress-bar"></div>
               <div class="progress-dot"></div>
@@ -75,12 +76,12 @@
         <div class="list">
           <!-- 新增加播放模式的 id 选择器 -->
           <svg class="icon" aria-hidden="true" id="musicMode">
-                        <use xlink:href="#icon-liebiaoxunhuan"></use>
-                    </svg>
+            <use xlink:href="#icon-liebiaoxunhuan"></use>
+          </svg>
           <!-- 新增加播放列表的 id 选择器 -->
           <svg class="icon" aria-hidden="true" id='playerList'>
-                        <use xlink:href="#icon-bofangliebiao"></use>
-                    </svg>
+            <use xlink:href="#icon-bofangliebiao"></use>
+          </svg>
         </div>
       </div>
     </section>
@@ -104,6 +105,7 @@
   <!-- 新添加音频 -->
   <audio src="" id="myAudio"></audio>
   <script src="./dist/main.js"></script>
+  <script type="module" src="./src/index.js"></script>
 </body>
 
 </html>

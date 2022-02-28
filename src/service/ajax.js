@@ -1,7 +1,7 @@
-// ajax.js
-const BASE_URL = 'http://localhost:3000';
-const processEnv = process.env || 'development';
 import { dataBlocks, songInfo, lyric, playlist } from "./api.js";
+const BASE_URL = 'http://101.43.140.74:3000';
+const processEnv = process.env || 'development';
+
 
 export default function Ajax({ //请求参数配置
   method = "GET", //默认为'get'请求
