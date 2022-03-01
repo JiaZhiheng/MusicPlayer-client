@@ -10,7 +10,7 @@
   width: 100%;
   font-size: 20px;
   text-align: center;
-  background-color: #2bb669;
+  background-color: #F54EA2;
   color: #fff;
   padding: 15px 0;
 }
@@ -276,7 +276,7 @@
   position: absolute;
   width: 50%;
   height: 4px;
-  background-color: #4dc376;
+  background-color: #f5587b;
 }
 
 .player-control-unit .progress .progress-dot {
@@ -286,7 +286,7 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background-color: #4dc376;
+  background-color: #f5587b;
 }
 
 .player-list {

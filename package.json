@@ -1,7 +1,7 @@
 {
   "name": "audio",
   "version": "1.0.0",
-  "description": "Javascript从零构建音乐播放器",
+  "description": "欣雅音乐",
   "main": "webpack.config.js",
   "scripts": {
     "dev": "webpack --mode=development --watch",

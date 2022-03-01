@@ -1,53 +1,53 @@
-import {getRecommendList} from "../service/ajax.js";
+import { getRecommendList } from "../service/ajax.js";
 import { reactive } from "../util/reactive.js";
-import { initPlayerControl,PlayerCoverBackMode,playerListRender } from "../home/control.js";
+import { initPlayerControl, PlayerCoverBackMode, playerListRender } from "../home/control.js";
 import { formatCreateTime, formatSongTime, songListFilter } from "../util/util.js";
 //获得歌单id
 // import { getRouterOptions } from "./util.js";
 
 const recommendDetail = {
-    playlist: [],
-    detail: {},
-    listActive: 1813926556
+  playlist: [],
+  detail: {},
+  listActive: 1813926556
 }
 
 // 移动鼠标高亮涉及到的变量
 const activeProxy = reactive({
-    active: recommendDetail.listActive,//存放音乐的id
+  active: recommendDetail.listActive, //存放音乐的id
 }, initList);
 
 // 双击播放音乐涉及到的变量
 const isPlayProxy = reactive({
-    active: recommendDetail.listActive,//存放音乐的id
-    isPlay: false,//歌曲是否在播放
+  active: recommendDetail.listActive, //存放音乐的id
+  isPlay: false, //歌曲是否在播放
 }, initList);
 
-export const recommendListPage = async ({ params = '' }) => {
-    document.querySelector('#app').innerHTML = `加载中`;
-    const result = await getRecommendList(params)
-    if (result.code == 404) {
-        document.querySelector('#app').innerHTML = `未找到资源`;
-    } else {
-        recommendDetail.detail = result.playlist;
-        recommendDetail.playlist = result.playlist.tracks;
-        initDescribe();
-        initList();
-        initEvent();
-    }
-    const musicId = window.localStorage.getItem('musicId');
-    window.localStorage.setItem('lastRecommendId',params);
-    PlayerCoverBackMode('player', musicId);
+export const recommendListPage = async({ params = '' }) => {
+  document.querySelector('#app').innerHTML = `加载中`;
+  const result = await getRecommendList(params)
+  if (result.code == 404) {
+    document.querySelector('#app').innerHTML = `未找到资源`;
+  } else {
+    recommendDetail.detail = result.playlist;
+    recommendDetail.playlist = result.playlist.tracks;
+    initDescribe();
+    initList();
+    initEvent();
+  }
+  const musicId = window.localStorage.getItem('musicId');
+  window.localStorage.setItem('lastRecommendId', params);
+  PlayerCoverBackMode('player', musicId);
 }
 
 function initDescribe() {
-    let tagsTemplate = '';
-    recommendDetail.detail.tags.forEach((tag, index) => {
-        index == recommendDetail.detail.tags.length - 1 ?
-            tagsTemplate += `<span class="tag">${tag}  </span>` :
-            tagsTemplate += `<span class="tag">${tag} / </span>`
-    });
-    let time = formatCreateTime(recommendDetail.detail.createTime)
-    document.querySelector('#app').innerHTML = `            
+  let tagsTemplate = '';
+  recommendDetail.detail.tags.forEach((tag, index) => {
+    index == recommendDetail.detail.tags.length - 1 ?
+      tagsTemplate += `<span class="tag">${tag}  </span>` :
+      tagsTemplate += `<span class="tag">${tag} / </span>`
+  });
+  let time = formatCreateTime(recommendDetail.detail.createTime)
+  document.querySelector('#app').innerHTML = `            
 <div class="w">
     <div class="recommend-header">
         <a href="#/home">首页</a>/
@@ -112,18 +112,19 @@ function initDescribe() {
 }
 
 function initList() {
-    const listDom = document.getElementsByClassName('recommend-list-songlist-body')[0];
-    let listTemplate = ''; let isEvenOrOdd = '';
-    recommendDetail.playlist.forEach((item, index) => {
-        isEvenOrOdd = index % 2 == 0 ? 'even' : 'odd';
-        let isActive = activeProxy.active == item.id ? 'active' : '';
-        let isPlay;
-        if (item.id == isPlayProxy.active) {
-            isPlay = isPlayProxy.isPlay;
-        } else {
-            isPlay = false;
-        }
-        listTemplate += `
+  const listDom = document.getElementsByClassName('recommend-list-songlist-body')[0];
+  let listTemplate = '';
+  let isEvenOrOdd = '';
+  recommendDetail.playlist.forEach((item, index) => {
+    isEvenOrOdd = index % 2 == 0 ? 'even' : 'odd';
+    let isActive = activeProxy.active == item.id ? 'active' : '';
+    let isPlay;
+    if (item.id == isPlayProxy.active) {
+      isPlay = isPlayProxy.isPlay;
+    } else {
+      isPlay = false;
+    }
+    listTemplate += `
         <li class="songlist-item pointer ${isEvenOrOdd} ${isActive} d-flex justify-content-start" data-index=${item.id}>
             <div class="songlist-number font-color">
                 <span class="index" style=${!isPlay ? 'display:inline-block' : 'display:none'}>${index + 1}</span>
@@ -151,45 +152,41 @@ function initList() {
             </div>
         </li>
         `;
-    })
-    listDom.innerHTML = listTemplate;
+  })
+  listDom.innerHTML = listTemplate;
 }
 
 function initEvent() {
-    const songListWrap = document.querySelector('.recommend-list-songlist-body');
-    songListWrap.addEventListener('mouseenter', (e) => {
-        const targetName = e.target.nodeName.toLocaleLowerCase();
-        if (targetName == 'li') {
-            const id = e.target.getAttribute('data-index');
-            //提升性能，防止多次触发
-            if (activeProxy.active == id) return;
-            activeProxy.active = id;
-        }
-    }, true);
-    songListWrap.addEventListener('dblclick', async (e) => {
-        //修改列表的播放图标
-        const targetName = e.target.nodeName.toLocaleLowerCase();
-        if (targetName == 'li') {
-            const id = e.target.getAttribute('data-index');
-            isPlayProxy.active = id;
-            window.localStorage.setItem('musicId', id);
-        } else if (targetName == 'div') {
-            const id = e.target.parentNode.getAttribute('data-index');
-            isPlayProxy.active = id;
-            window.localStorage.setItem('musicId', id);
-        }
-        isPlayProxy.isPlay = true;
-        initPlayerControl();
-    }, true);
-    /* 点击将歌曲列表添加到播放列表中 */
-    const addSongList = document.querySelector('.recommend-describe-right-add');
-    addSongList.addEventListener('click', () => {
-        const arr = songListFilter(recommendDetail.playlist)
-        window.localStorage.setItem('songList', JSON.stringify(arr))
-        playerListRender();
-    })
+  const songListWrap = document.querySelector('.recommend-list-songlist-body');
+  songListWrap.addEventListener('mouseenter', (e) => {
+    const targetName = e.target.nodeName.toLocaleLowerCase();
+    if (targetName == 'li') {
+      const id = e.target.getAttribute('data-index');
+      //提升性能，防止多次触发
+      if (activeProxy.active == id) return;
+      activeProxy.active = id;
+    }
+  }, true);
+  songListWrap.addEventListener('dblclick', async(e) => {
+    //修改列表的播放图标
+    const targetName = e.target.nodeName.toLocaleLowerCase();
+    if (targetName == 'li') {
+      const id = e.target.getAttribute('data-index');
+      isPlayProxy.active = id;
+      window.localStorage.setItem('musicId', id);
+    } else if (targetName == 'div') {
+      const id = e.target.parentNode.getAttribute('data-index');
+      isPlayProxy.active = id;
+      window.localStorage.setItem('musicId', id);
+    }
+    isPlayProxy.isPlay = true;
+    initPlayerControl();
+  }, true);
+  /* 点击将歌曲列表添加到播放列表中 */
+  const addSongList = document.querySelector('.recommend-describe-right-add');
+  addSongList.addEventListener('click', () => {
+    const arr = songListFilter(recommendDetail.playlist)
+    window.localStorage.setItem('songList', JSON.stringify(arr))
+    playerListRender();
+  })
 }
-
-
-
-

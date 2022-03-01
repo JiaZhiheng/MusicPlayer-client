@@ -35,7 +35,7 @@ function changeComponent() {
   let options = getRouterOptions(hashProxy.hash);
   const [{ component, name }] = routers.filter(router => router.name == options.name);
   component(options);
-  document.querySelector('#header-title').innerHTML = name;
+  // document.querySelector('#header-title').innerHTML = name;
 }
 
 // 监听页面 load 和 hashchange 事件，事件触发后对代理对象赋值

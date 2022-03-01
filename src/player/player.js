@@ -11,32 +11,32 @@ import { blur, formatSongLyric } from "../util/util.js";
 //     PlayerCoverBackMode('recommend', lastRecommendId);
 // }
 const music = {
-    data: [],
-    lyric: [],
+  data: [],
+  lyric: [],
 }
 
 const musicDataProxy = reactive({
-    musicId: 1813926556,
+  musicId: 1813926556,
 }, initPlayer)
 
 export async function playerPage({ params: id = '' }) {
-    document.querySelector('#app').innerHTML = 'playerPage加载中';
-    changePlayerMusicId(id)
+  document.querySelector('#app').innerHTML = 'playerPage加载中';
+  changePlayerMusicId(id)
     // 更改歌曲是否返回推荐列表详情页还是去播放列表
-    const lastRecommendId = window.localStorage.getItem('lastRecommendId');
-    PlayerCoverBackMode('recommend', lastRecommendId);
+  const lastRecommendId = window.localStorage.getItem('lastRecommendId');
+  PlayerCoverBackMode('recommend', lastRecommendId);
 }
 export async function changePlayerMusicId(musicId) {
-    const id = musicId;
+  const id = musicId;
 
-    const musicData = await getAudioInfo(id);
-    const musicLyric = await getAudioLyric(id);
-    music.data = musicData;
+  const musicData = await getAudioInfo(id);
+  const musicLyric = await getAudioLyric(id);
+  music.data = musicData;
 
-    //初始化播放器歌词
-    music.lyric = formatSongLyric(musicLyric.lrc.lyric);
+  //初始化播放器歌词
+  music.lyric = formatSongLyric(musicLyric.lrc.lyric);
 
-    musicDataProxy.musicId = id;
+  musicDataProxy.musicId = id;
 }
 
 /**
@@ -45,10 +45,10 @@ export async function changePlayerMusicId(musicId) {
  * @return {*}
  */
 async function initPlayer() {
-    console.log("🚀 ~ file: player.js ~ line 50 ~ initPlayer ~ musicData.data", music.data)
+  console.log("🚀 ~ file: player.js ~ line 50 ~ initPlayer ~ musicData.data", music.data)
 
-    let songInfo = music.data.songs[0];
-    document.querySelector('#app').innerHTML = `
+  let songInfo = music.data.songs[0];
+  document.querySelector('#app').innerHTML = `
     <div class="player-background-image">
         <div class="player-content d-flex">
             <div class="player-album-cover d-flex">
@@ -66,9 +66,9 @@ async function initPlayer() {
                 ${songInfo.name}
                 </h3>
                 <div class="song-info">
-                    <span class="song-album">专辑：${songInfo.al.name}</span>
-                    <span class="singer">歌手：${songInfo.ar[0].name}</span>
-                    <span class="song-sour">来源：${songInfo.al.name}</span>
+                    <span class="singer">${songInfo.ar[0].name}</span>
+                    <span>-</span>
+                    <span class="song-album">${songInfo.al.name}</span>
                 </div>
                 <div class="lyric-wrap">
                 ${initLyric(music.lyric)}
@@ -77,8 +77,8 @@ async function initPlayer() {
         </div>
     </div>
     `;
-    initPlayerEvent();
-    imgBlur();
+  initPlayerEvent();
+  imgBlur();
 }
 
 /**
@@ -87,9 +87,9 @@ async function initPlayer() {
  * @return {*}
  */
 function imgBlur() {
-    const imgBox = document.querySelector('.player-background-image');
-    let imgSrc = music.data.songs[0].al.picUrl;
-    blur(imgBox, imgSrc)
+  const imgBox = document.querySelector('.player-background-image');
+  let imgSrc = music.data.songs[0].al.picUrl;
+  blur(imgBox, imgSrc)
 }
 
 /**
@@ -98,50 +98,50 @@ function imgBlur() {
  * @return {*}
  */
 function initLyric(lyricData) {
-    if (lyricData.length == 0) return '';
-    let tempStr = '';
-    lyricData.forEach(item => {
-        tempStr += `
+  if (lyricData.length == 0) return '';
+  let tempStr = '';
+  lyricData.forEach(item => {
+    tempStr += `
         <p class="song-lyric-item" data-time='${item.time}'>${Object.keys(item).length > 0 ? item.lyric : ''}</p>
         `
-    });
-    return tempStr;
+  });
+  return tempStr;
 }
 
 function initPlayerEvent() {
-    const audio = document.querySelector('#myAudio');
-    audio.addEventListener('timeupdate', (e) => {
-        // 获得音乐播放当前的时间
-        const lyricItem = document.querySelectorAll('.song-lyric-item');
-        if (!lyricItem.length) return;
+  const audio = document.querySelector('#myAudio');
+  audio.addEventListener('timeupdate', (e) => {
+    // 获得音乐播放当前的时间
+    const lyricItem = document.querySelectorAll('.song-lyric-item');
+    if (!lyricItem.length) return;
 
-        const currentTime = e.target.currentTime;
-        let i = 0;
-        Array.from(lyricItem).forEach(item => {
-            const time = item.getAttribute('data-time');
-            if (currentTime > time) i++;
-            item.classList.remove('active');
-        });
-        lyricItem[i - 1].classList.add('active');
-        if (i > 5) {
-            setScrollTop('lyric-wrap', 'song-lyric-item', i - 1 - 5);
-        }
-    })
-    audio.addEventListener('ended', () => {
-        const ablumCover = document.querySelector('.ablum .cover');
-        if (!ablumCover) return;
-        ablumCover.style.animationPlayState = 'paused';
-    })
-    audio.addEventListener('pause', () => {
-        const ablumCover = document.querySelector('.ablum .cover');
-        if (!ablumCover) return;
-        ablumCover.style.animationPlayState = 'paused';
-    })
-    audio.addEventListener('playing', () => {
-        const ablumCover = document.querySelector('.ablum .cover');
-        if (!ablumCover) return;
-        ablumCover.style.animationPlayState = 'running';
-    })
+    const currentTime = e.target.currentTime;
+    let i = 0;
+    Array.from(lyricItem).forEach(item => {
+      const time = item.getAttribute('data-time');
+      if (currentTime > time) i++;
+      item.classList.remove('active');
+    });
+    lyricItem[i - 1].classList.add('active');
+    if (i > 5) {
+      setScrollTop('lyric-wrap', 'song-lyric-item', i - 1 - 5);
+    }
+  })
+  audio.addEventListener('ended', () => {
+    const ablumCover = document.querySelector('.ablum .cover');
+    if (!ablumCover) return;
+    ablumCover.style.animationPlayState = 'paused';
+  })
+  audio.addEventListener('pause', () => {
+    const ablumCover = document.querySelector('.ablum .cover');
+    if (!ablumCover) return;
+    ablumCover.style.animationPlayState = 'paused';
+  })
+  audio.addEventListener('playing', () => {
+    const ablumCover = document.querySelector('.ablum .cover');
+    if (!ablumCover) return;
+    ablumCover.style.animationPlayState = 'running';
+  })
 }
 /**
  * @description: 滚动条自动滑动的距离
@@ -151,14 +151,14 @@ function initPlayerEvent() {
  * @return {*}
  */
 function setScrollTop(className, target, index) {
-    const ele = document.querySelector(`.${className}`);
-    if (typeof target == "number") {
-        ele.scrollTop = index * target;
-    } else if (typeof target == 'string') {
-        const { height } = document.querySelector(`.${target}`).getBoundingClientRect();
-        ele.scrollTop = index * height;
-    } else if (target instanceof HTMLElement) {
-        const { height } = target.getBoundingClientRect();
-        ele.scrollTop = index * height;
-    }
+  const ele = document.querySelector(`.${className}`);
+  if (typeof target == "number") {
+    ele.scrollTop = index * target;
+  } else if (typeof target == 'string') {
+    const { height } = document.querySelector(`.${target}`).getBoundingClientRect();
+    ele.scrollTop = index * height;
+  } else if (target instanceof HTMLElement) {
+    const { height } = target.getBoundingClientRect();
+    ele.scrollTop = index * height;
+  }
 }
