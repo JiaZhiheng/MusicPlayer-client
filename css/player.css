@@ -89,7 +89,10 @@
 }
 
 .player-lyric .lyric-wrap .song-lyric-item.active {
-  color: rgba(129, 52, 175, .7);
+  color: rgba(249, 188, 221, .7);
+  font-size: larger;
+  font-weight: bold;
+  text-shadow: 0px 0px 1px #f9bcdd;
 }
 
 .player-background-image {
